@@ -12,6 +12,13 @@ namespace Server1.Controllers
 
 		public Task SendPrivateMessage(string name, string connectionId, string message)
 		{
+			Console.WriteLine($"SendPrivateMessage chamado com: name={name}, connectionId={connectionId}, message={message}");
+
+			if (string.IsNullOrEmpty(connectionId))
+			{
+				throw new ArgumentException("ConnectionId não pode ser nulo ou vazio.");
+			}
+
 			return Clients.Client(connectionId).SendAsync("ReceiveMessage", name, message);
 		}
 
@@ -20,5 +27,7 @@ namespace Server1.Controllers
 			Console.WriteLine(Context.ConnectionId);
 			return base.OnConnectedAsync();	
 		}
+
+
 	}
 }

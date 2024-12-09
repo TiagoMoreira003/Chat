@@ -1,6 +1,5 @@
 ﻿﻿using Client1;
 using Microsoft.AspNetCore.SignalR.Client;
-using System.IO.Pipes;
 
 public class Program
 {
@@ -58,12 +57,11 @@ public class Program
 
 			while (option == "2")
 			{
-				Console.WriteLine(connectionId);
 
 				Console.WriteLine("Send Message!");
 				var message = Console.ReadLine();
 
-				await SendPrivateMessage(connection, client.Name, connectionId, message);
+				connection.InvokeAsync("SendPrivateMessage", client.Name, connectionId, message);
 
 				Console.WriteLine("Message sent!");
 
@@ -89,10 +87,5 @@ public class Program
 		{
 			Console.WriteLine($"Error sending message: {ex.Message}");
 		}
-	}
-
-	public static async Task SendPrivateMessage(HubConnection connection, string name, string connectionId, string text) 
-	{
-		await connection.InvokeAsync("SendPrivateMessage", name, connection, text);
 	}
 }
