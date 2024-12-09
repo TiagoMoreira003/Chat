@@ -1,4 +1,4 @@
-using Server1.Controllers;
+using Server.Hub;
 
 var builder = WebApplication.CreateBuilder(args);
 
