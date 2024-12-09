@@ -22,12 +22,21 @@ namespace Server1.Controllers
 			return Clients.Client(connectionId).SendAsync("ReceiveMessage", name, message);
 		}
 
+		public async Task SendMessageToGroup(string groupName, string name, string message) 
+		{
+			await Clients.Group(groupName).SendAsync("ReceiveMessage", name, message);
+		}
+
+		public async Task AddToGroup(string groupName) 
+		{
+			await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+		}
+
 		public override Task OnConnectedAsync()
 		{
 			Console.WriteLine(Context.ConnectionId);
 			return base.OnConnectedAsync();	
 		}
-
 
 	}
 }

@@ -27,7 +27,8 @@ public class Program
 
 		Console.WriteLine("Chose the option:\n" +
 			"1 - Send message to everyone\n" +
-			"2 - Send message to specific person  ");
+			"2 - Send message to specific person\n" +
+			"3 - Send message to group ");
 		string option =  Console.ReadLine();
 
 		if (option == "1")
@@ -42,6 +43,30 @@ public class Program
 				Console.WriteLine("Message sent!");
 
 				Console.WriteLine("Do you want to send more messages(1/0): ");
+				option = Console.ReadLine();
+
+				if (option == "0")
+				{
+					Console.WriteLine("Goodbye!");
+				}
+			}
+		}
+
+		else if (option == "3") 
+		{
+			Console.WriteLine("Wich group?");
+			string groupName = Console.ReadLine();
+
+			connection.InvokeAsync("AddToGroup", groupName);
+
+			Console.WriteLine("Send messages to the group");
+			string message = Console.ReadLine();
+
+			while (option == "3")
+			{
+				connection.InvokeAsync("SendMessageToGroup", groupName, client.Name, message);
+				
+				Console.WriteLine("Do you want to send more messages(3/0): ");
 				option = Console.ReadLine();
 
 				if (option == "0")
@@ -81,7 +106,7 @@ public class Program
 	{
 		try
 		{
-				await connection.InvokeAsync("SendMessage", name, text);
+			await connection.InvokeAsync("SendMessage", name, text);
 		}
 		catch (Exception ex)
 		{
