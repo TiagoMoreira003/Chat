@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace Server1.Controllers
+﻿namespace Server.Hub
 {
+	using Microsoft.AspNetCore.SignalR;
+
 	public class ChatHub : Hub
 	{
-
 		public async Task SendMessage(string name, string message)
 		{
 			await Clients.All.SendAsync("ReceiveMessage", name, message);
