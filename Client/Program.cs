@@ -12,7 +12,7 @@ public class Program
 		Client client = new Client(Console.ReadLine());
 
 		HubConnection connection = new HubConnectionBuilder()
-			.WithUrl($"http://localhost:5261/Chat")
+			.WithUrl($"http://localhost:5261/Chat?username={client.Name}")
 			.Build();
 
 		connection.On<string, string>("ReceiveMessage", (username, message) =>

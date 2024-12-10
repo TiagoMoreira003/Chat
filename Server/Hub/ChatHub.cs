@@ -8,6 +8,7 @@
 		public static int messagesSent = 0;
 		public static int connectionsCounter  = 0;
 		public static string connectionInterface = "";
+		public static string guid = "";
 
 		public async Task SendMessage(string name, string message)
 		{
@@ -52,19 +53,16 @@
 		public override Task OnConnectedAsync()
 		{
 			var httpContext = Context.GetHttpContext();
-			var type = httpContext.Request.Query["type"].ToString();
+			var type = httpContext.Request.Query["username"].ToString();
 
 			if (type == "interface")
 			{
+				guid = Context.UserIdentifier;
 				connectionInterface = Context.ConnectionId;
 				return base.OnConnectedAsync();
 			}
 
-			Console.WriteLine(Context.ConnectionId);
 			IncrementConnection();
-			Console.WriteLine(connectionsCounter);
-
-
 			SendToInterface();
 
 			return base.OnConnectedAsync();
@@ -79,7 +77,7 @@
 
 		public async Task SendToInterface()
 		{
-			await Clients.Client(connectionInterface).SendAsync("Data", messagesSent, connectionsCounter);
+			await Clients.User(guid).SendAsync("Data", messagesSent, connectionsCounter);
 		}
 
 		public void IncrementMessages() 
