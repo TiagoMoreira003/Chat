@@ -7,8 +7,7 @@
 
 		public static int messagesSent = 0;
 		public static int connectionsCounter  = 0;
-		public static string connectionInterface = "";
-		public static string guid = "";
+		public static List<string> usernames = new List<string>();
 
 		public async Task SendMessage(string name, string message)
 		{
@@ -17,19 +16,14 @@
 			SendToInterface();
 		}
 
-		public Task SendPrivateMessage(string name, string connectionId, string message)
+		public Task SendPrivateMessage(string name, string person, string message)
 		{
+			var userId = usernames.FirstOrDefault(username => username == person);
+
 			IncrementMessages();
-			Console.WriteLine($"SendPrivateMessage chamado com: name={name}, connectionId={connectionId}, message={message}");
-
-			if (string.IsNullOrEmpty(connectionId))
-			{
-				throw new ArgumentException("ConnectionId não pode ser nulo ou vazio.");
-			}
-
 			SendToInterface();
 
-			return Clients.Client(connectionId).SendAsync("ReceiveMessage", name, message);
+			return Clients.User(userId).SendAsync("ReceiveMessage", name, message);
 		}
 
 		public async Task SendMessageToGroup(string groupName, string name, string message)
@@ -52,13 +46,13 @@
 
 		public override Task OnConnectedAsync()
 		{
-			var httpContext = Context.GetHttpContext();
-			var type = httpContext.Request.Query["username"].ToString();
+			var username = Context.UserIdentifier;
+			usernames.Add(username);
 
-			if (type == "interface")
+			Console.WriteLine(username);
+
+			if (username == "interface")
 			{
-				guid = Context.UserIdentifier;
-				connectionInterface = Context.ConnectionId;
 				return base.OnConnectedAsync();
 			}
 
@@ -77,7 +71,9 @@
 
 		public async Task SendToInterface()
 		{
-			await Clients.User(guid).SendAsync("Data", messagesSent, connectionsCounter);
+			var interfaceId = usernames.FirstOrDefault(username => username == "interface");
+
+			await Clients.User(interfaceId).SendAsync("Data", messagesSent, connectionsCounter);
 		}
 
 		public void IncrementMessages() 

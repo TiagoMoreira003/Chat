@@ -6,7 +6,10 @@ namespace Server
 	{
 		public string GetUserId(HubConnectionContext connection)
 		{
-			return Guid.NewGuid().ToString();
+			var httpContext = connection.GetHttpContext();
+			var username = httpContext.Request.Query["username"].ToString();
+
+			return username;
 		}
 	}
 }

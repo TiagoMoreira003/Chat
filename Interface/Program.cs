@@ -8,7 +8,7 @@ public class Program
 	{
 
 		HubConnection connection = new HubConnectionBuilder()
-			.WithUrl($"http://localhost:5261/Chat?type=interface")
+			.WithUrl($"http://localhost:5261/Chat?username=interface")
 			.Build();
 
 		connection.On<int, int>("Data", (messagesSent, connectionCounter) =>
