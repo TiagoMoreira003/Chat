@@ -53,7 +53,7 @@ public class Program
 
 			else if (option == "3")
 			{
-				Console.WriteLine("Wich group?");
+				Console.WriteLine("Which group?");
 				string groupName = Console.ReadLine();
 
 				connection.InvokeAsync("AddToGroup", groupName);
@@ -84,7 +84,7 @@ public class Program
 
 			else if(option == "2")
 			{
-				Console.WriteLine("Wich person?");
+				Console.WriteLine("Which person?");
 				string person = Console.ReadLine();
 
 				string option2 = "y";
