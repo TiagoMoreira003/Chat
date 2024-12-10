@@ -13,7 +13,7 @@ public class Program
 
 		connection.On<int, int>("Data", (messagesSent, connectionCounter) =>
 		{
-			Console.WriteLine($"Connections Counter: {messagesSent}\n" +
+			Console.WriteLine($"Connections Counter: {connectionCounter}\n" +
 				$"Messages Sent: {messagesSent}");
 		});
 

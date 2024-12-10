@@ -6,19 +6,19 @@
 	{
 
 		public static int messagesSent = 0;
-		public static int connectionsCounter = 0;
+		public static int connectionsCounter  = 0;
 		public static string connectionInterface = "";
 
 		public async Task SendMessage(string name, string message)
 		{
-			messagesSent++;
+			IncrementMessages();
 			await Clients.All.SendAsync("ReceiveMessage", name, message);
 			SendToInterface();
 		}
 
 		public Task SendPrivateMessage(string name, string connectionId, string message)
 		{
-			messagesSent++;
+			IncrementMessages();
 			Console.WriteLine($"SendPrivateMessage chamado com: name={name}, connectionId={connectionId}, message={message}");
 
 			if (string.IsNullOrEmpty(connectionId))
@@ -33,7 +33,7 @@
 
 		public async Task SendMessageToGroup(string groupName, string name, string message)
 		{
-			messagesSent++;
+			IncrementMessages();
 			await SendToInterface();
 			await Clients.Group(groupName).SendAsync("ReceiveMessage", name, message);
 		}
@@ -61,7 +61,9 @@
 			}
 
 			Console.WriteLine(Context.ConnectionId);
-			connectionsCounter++;
+			IncrementConnection();
+			Console.WriteLine(connectionsCounter);
+
 
 			SendToInterface();
 
@@ -70,7 +72,7 @@
 
 		public override Task OnDisconnectedAsync(Exception? exception)
 		{
-			connectionsCounter--;
+			DecrementConnection();
 			SendToInterface();
 			return base.OnDisconnectedAsync(exception);
 		}
@@ -78,6 +80,21 @@
 		public async Task SendToInterface()
 		{
 			await Clients.Client(connectionInterface).SendAsync("Data", messagesSent, connectionsCounter);
+		}
+
+		public void IncrementMessages() 
+		{
+			messagesSent++;
+		}
+
+		public void IncrementConnection() 
+		{
+			connectionsCounter++;
+		}
+
+		public void DecrementConnection()
+		{
+			connectionsCounter--;
 		}
 
 	}
