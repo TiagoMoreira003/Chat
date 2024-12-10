@@ -12,7 +12,7 @@ public class Program
 		Client client = new Client(Console.ReadLine());
 
 		HubConnection connection = new HubConnectionBuilder()
-			.WithUrl($"http://localhost:5261/Chat")
+			.WithUrl($"http://localhost:5261/Chat?username={client.Name}")
 			.Build();
 
 		connection.On<string, string>("ReceiveMessage", (username, message) =>
@@ -38,18 +38,16 @@ public class Program
 
 			if (option == "1")
 			{
-				while (option == "1")
+				string option2 = "y";
+				while (option2 == "y")
 				{
-
+					Console.WriteLine("Send message to everyone: ");
 					var message = Console.ReadLine();
 
 					await SendMessage(connection, client.Name, message);
 
-					Console.WriteLine("Message sent!");
-
-					Console.WriteLine("Do you want to send more messages(1/0): ");
-					option = Console.ReadLine();
-
+					Console.WriteLine("Do you want to send more messages(y/n): ");
+					option2 = Console.ReadLine();
 				}
 			}
 
@@ -60,17 +58,18 @@ public class Program
 
 				connection.InvokeAsync("AddToGroup", groupName);
 
-				Console.WriteLine("Send messages to the group");
+				Console.WriteLine($"Send messages to {groupName}: ");
 				string message = Console.ReadLine();
 
-				while (option == "3")
+				string option2 = "y";
+				while (option2 == "y")
 				{
 					connection.InvokeAsync("SendMessageToGroup", groupName, client.Name, message);
 
-					Console.WriteLine("Do you want to send more messages to this group(3/0): ");
-					option = Console.ReadLine();
+					Console.WriteLine("Do you want to send more messages to this group(y/n): ");
+					option2 = Console.ReadLine();
 
-					if (option == "0")
+					if (option2 == "n")
 					{
 						connection.InvokeAsync("RemoveFromGroup", groupName);
 					}
@@ -83,23 +82,22 @@ public class Program
 				finished = true;
 			}
 
-			else
+			else if(option == "2")
 			{
 				Console.WriteLine("Wich person?");
-				string connectionId = Console.ReadLine();
+				string person = Console.ReadLine();
 
-				while (option == "2")
+				string option2 = "y";
+				while (option2 == "y")
 				{
 
-					Console.WriteLine("Send Message!");
+					Console.WriteLine($"Send Message to {person}:");
 					var message = Console.ReadLine();
 
-					connection.InvokeAsync("SendPrivateMessage", client.Name, connectionId, message);
+					connection.InvokeAsync("SendPrivateMessage", client.Name, person, message);
 
-					Console.WriteLine("Message sent!");
-
-					Console.WriteLine("Do you want to send more messages(2/0): ");
-					option = Console.ReadLine();
+					Console.WriteLine("Do you want to send more messages(y/n): ");
+					option2 = Console.ReadLine();
 
 				}
 			}
