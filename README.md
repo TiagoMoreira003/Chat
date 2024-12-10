@@ -7,6 +7,7 @@ This project is a command-line interface (CLI) application built in C that utili
 - Send public messages to all connected users.
 - Engage in private conversations between two users.
 - Create and join groups for group chats.
+- An interface/dashboard that shows the active connections and the number of messages sent in real-time.
 
 ## Features
 
